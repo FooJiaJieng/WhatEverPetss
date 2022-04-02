@@ -25,7 +25,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import { v4 as uuidv4 } from 'uuid';
 import { CommonStore } from '../../store/CommonStore';
 import { authentication, db } from '../../constants/key';
-import { collection, getDocs, setDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, setDoc, doc, updateDoc, increment } from 'firebase/firestore';
 
 
 const AddProductScreen = props => {
@@ -105,12 +105,33 @@ useEffect(() => {
 
 //Update Service
 const updateExistService = async () => {
-    const userRef = doc(db, 'user', userSelected.uniqueID);
+    const userRef = doc(db, 'Service', serviceSelectedEdit.uniqueID);
     await updateDoc(userRef, {
-        walletAmount: increment(50)
+        serviceName: serviceName,
+        serviceDescription: serviceDescription,
+        serviceType: serviceCat,
+        serviceDeposit: serviceDeposit,
+        serviceDuration: serviceDuration,
+        serviceTimeInfo: serviceTimeInfo,
+        isMonday: isMonday,
+        isTuesday: isTuesday,
+        isWednesday: isWednesday,
+        isThursday: isThursday,
+        isFriday: isFriday,
+        isSaturday: isSaturday,
+        isSunday: isSunday,
     })
-
-            navigation.goBack();
+    .then(() => {
+        Alert.alert(
+            'Updated',
+            'Successfully Updated Service',
+            [{ text: 'OK', onPress: () => {
+                navigation.goBack();
+            } }],
+            { cancelable: false },
+        );
+        
+    })
       
 }
 
@@ -668,7 +689,7 @@ return (
                         elevation: 2,
                 }}
                     onPress={() => {
-                        createNewService()
+                        updateExistService()
                     }}
                 >
                     <Text style={ styles.text }>
@@ -693,6 +714,7 @@ return (
                         elevation: 2,
                 }}
                     onPress={() => {
+                        createNewService()
                     }}
                 >
                     <Text style={ styles.text }>

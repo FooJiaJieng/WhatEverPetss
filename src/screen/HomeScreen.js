@@ -11,11 +11,8 @@ const userSelected = CommonStore.useState(s => s.userSelected);
 const userList = CommonStore.useState(s => s.userList);
 const serviceList = CommonStore.useState(s => s.serviceList);
 const sellerServiceList = CommonStore.useState(s => s.sellerServiceList);
+const serviceSelected = CommonStore.useState(s => s.serviceSelected);
 
-// const isLoggedIn = CommonStore.useState(s => s.isLoggedIn);
-// const firebaseUid = CommonStore.useState(s => s.firebaseUid);
-// const sellerServiceList = CommonStore.useState(s => s.sellerServiceList);
-    
     
 const { navigation, route } = props;
 
@@ -93,6 +90,55 @@ navigation.setOptions({
                     shadowRadius: 5,
                     elevation: 1,
             }}>
+                <View>
+                    {/* <Image
+                        source={item.serviceImg}
+                        style={{
+                        width: 50,
+                        height: 50,
+                        borderRadius: 50,
+                        borderWidth: 1,
+                        marginRight: 10,
+                        }}
+                    /> */}
+                </View>
+                <Text>{item.serviceName}</Text>
+                <Text>{item.serviceType}</Text>
+                <Text>{item.serviceDeposit}</Text>
+            </TouchableOpacity>
+        )
+    };
+
+    const renderSelectedService =({item, index}) => {
+        return(
+            <TouchableOpacity style={{
+                width: 170,
+                height: 130,
+                padding: 5,
+                borderWidth: 1,
+                borderColor: '#E5E5E5',
+                borderRadius: 5,
+                marginRight: 10,
+                marginLeft: 5,
+                marginVertical: 5,
+                marginBottom: 10,
+                backgroundColor: Colors.lavender,
+                shadowOffset: {
+                    width: 0,
+                    height: 5,
+                    },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 5,
+                    elevation: 1,
+            }}
+                onPress={() => {
+                    navigation.navigate('ServiceDetails');
+                    CommonStore.update( s => {
+                        s.serviceSelected = item;
+                    });
+                    console.log(serviceSelected)
+                }}
+            >
                 <View>
                     {/* <Image
                         source={item.serviceImg}
@@ -231,7 +277,7 @@ navigation.setOptions({
                     </View>
                     <FlatList
                         data={serviceList}
-                        renderItem={renderReceipt}
+                        renderItem={renderSelectedService}
                         keyExtractor={(item, index) => index.toString()}
                         //horizontal={true}
                         numColumns={2}

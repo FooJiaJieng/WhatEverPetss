@@ -18,7 +18,7 @@ import BuyerProfileScreen from './src/screen/BuyerProfileScreen';
 import SellerProfileScreen from './src/screen/SellerProfileScreen';
 import SellerStoreScreen from './src/screen/SellerStore';
 import AddProductScreen from './src/screen/AddProductScreen';
-
+import ServiceDetailsScreen from './src/screen/ServiceDetailsScreen';
 
 
 //Firebase
@@ -49,6 +49,7 @@ function HomeScreenStack() {
   return(
     <Stack.Navigator>
       <Stack.Screen name='Home' component={HomeScreen} options={ headerOption }/>
+      <Stack.Screen name='ServiceDetails' component={ServiceDetailsScreen} options={ headerOption }/>
     </Stack.Navigator>
   )
 };
