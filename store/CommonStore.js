@@ -12,8 +12,7 @@ export const CommonStore = new Store({
 
     serviceList: [],
     sellerServiceList: [],
-    serviceCategorySelected: [],
-    serviceSelected: {},
+    serviceSelected: null,
     serviceSelectedEdit: null,
 
     customerOrder: [],

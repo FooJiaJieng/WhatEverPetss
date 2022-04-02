@@ -24,6 +24,8 @@ import RNDateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { v4 as uuidv4 } from 'uuid';
 import { CommonStore } from '../../store/CommonStore';
+
+//Firebase
 import { authentication, db } from '../../constants/key';
 import { collection, getDocs, setDoc, doc, updateDoc, increment } from 'firebase/firestore';
 
@@ -130,7 +132,6 @@ const updateExistService = async () => {
             } }],
             { cancelable: false },
         );
-        
     })
       
 }
@@ -176,7 +177,7 @@ const renderServiceTimeInfo = ({item, index}) => {
                         styles.textInput1
                     ,{ width: '50%' }]}
                     placeholder={'Slot'}
-                    onChangeText={(text)=>{
+                    onChangeText={(text) => {
                         setServiceTimeInfo(
                             serviceTimeInfo.map((serviceInfo, i) =>
                               i === index
