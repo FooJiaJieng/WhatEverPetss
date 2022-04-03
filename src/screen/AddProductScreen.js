@@ -109,6 +109,7 @@ useEffect(() => {
 const updateExistService = async () => {
     const userRef = doc(db, 'Service', serviceSelectedEdit.uniqueID);
     await updateDoc(userRef, {
+        serviceStoreName: userSelected.storeName,
         serviceName: serviceName,
         serviceDescription: serviceDescription,
         serviceType: serviceCat,
@@ -157,6 +158,7 @@ const createNewService = async () => {
         isSunday: isSunday,
         createdAt: Date.now(),
         isActive: true,
+        serviceStoreName: userSelected.storeName,
         sellerID: userSelected.uniqueID,
     }
 

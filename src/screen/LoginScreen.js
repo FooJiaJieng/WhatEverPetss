@@ -79,7 +79,10 @@ const registerUserAcc = async () => {
                     storeName: regName,
                     userEmail: regEmail,
                     contactNo: regContactNo,
+                    storeContactNo: '',
+                    storeAddress: '',
                     walletAmount: 0,
+                    storeWallet: 0,
                     createdAt: Date.now(),
                     isActive: true,
                   }

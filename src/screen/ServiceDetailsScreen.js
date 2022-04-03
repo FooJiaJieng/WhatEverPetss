@@ -17,6 +17,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constant/Colors';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import moment from 'moment';
 import { CommonStore } from '../../store/CommonStore';
 
 //Firebase
@@ -25,30 +26,16 @@ import { collection, getDocs, setDoc, doc, updateDoc, increment } from 'firebase
 
 const ServiceDetailsScreen = props => {
 
-const [serviceSelectedTimeInfo, setServiceSelectedTimeInfo] = useState([
-  {
-    availableSlot: 0,
-    startTime: "",
-    endTime: "",
-    endTimePickerVisible: false,
-  },
-]); 
-//const [serviceSelectedTimeInfo, setServiceSelectedTimeInfo] = useState([]);
+const [storeName, setStoreName] = useState([]);
+const [showDatePicker, setShowDatePicker] = useState(false);
+const [selectedServiceDate, setSelectedServiceDate] = useState(Date.now());
+const [selectedServiceStartTime, setSelectedServiceStartTime] = useState('');
+const [selectedServiceEndTime, setSelectedServiceEndTime] = useState('');
+const [selectedServiceSlot, setSelectedServiceSlot] = useState(0);
+
 
 const serviceSelected = CommonStore.useState(s => s.serviceSelected);
-
-useEffect(() => {
-  var timeInfoTemp = [];
-
-  for(var i = 0; i < serviceSelected.serviceTimeInfo.length; i++ ){
-    const timeInfo = serviceSelected.serviceTimeInfo;
-    timeInfoTemp.push(timeInfo);
-  }
-
-  setServiceSelectedTimeInfo(timeInfoTemp);
-  console.log(serviceSelectedTimeInfo);
-
-},[serviceSelected]);
+const userList = CommonStore.useState(s => s.userList);
 
 
 const { navigation, route } = props;
@@ -84,7 +71,7 @@ navigation.setOptions({
           fontWeight: 'bold',
           color: 'black',
         }}>
-          {serviceSelected.serviceName}
+          {serviceSelected.serviceStoreName}
       </Text>
     </View>
   ),
@@ -101,6 +88,21 @@ navigation.setOptions({
             backgroundColor: Colors.white,
     }}
     >
+      <DateTimePicker
+        isVisible={showDatePicker}
+        
+        mode={'date'}
+        display={'default'}
+        minimumDate={Date.now()}
+        
+        onConfirm={(date) => {
+          setShowDatePicker(false)
+          setSelectedServiceDate(date)
+        }}
+        onCancel={() => {
+          setShowDatePicker(false)
+        }}
+      />
       <View style={{ 
         backgroundColor: Colors.white,
         //height: '100%',
@@ -113,7 +115,7 @@ navigation.setOptions({
                     borderWidth: 1,
                     borderRadius: 10,
                     width: '100%',
-                    height: 180,
+                    height: 150,
                 }}
                 source={{uri: serviceSelected.serviceImg}}
             />
@@ -127,34 +129,101 @@ navigation.setOptions({
               </Text>
           </View>
           <View style={styles.view}>
-              <Text>
+              <Text style={{ fontSize: 16, fontWeight: '500' }}>
+                Description:
+              </Text>
+              <Text style={{ fontSize: 16, fontWeight: '400' }}>
                 {serviceSelected.serviceDescription}
               </Text>
           </View>
           <View style={styles.view}>
-              <Text>
-                Deposit: (Full Payment Will Be Made After Service)
+            <Text style={{ fontSize: 15, fontWeight: '500', color: 'red' }}>
+              (Full Payment Will Only Be Made After Service)
+            </Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ fontSize: 16, fontWeight: '500' }}>
+                Deposit:{' '}
               </Text>
-              <Text>
+              <Text style={{ fontSize: 20, fontWeight: '500' }}>
                 RM {serviceSelected.serviceDeposit}
               </Text>
+            </View>
           </View>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: 'row', paddingTop: 10 }}>
             {serviceSelected.serviceTimeInfo.map((timeInfo, i) => {
               return (  
-                <View style={{ marginRight: 8 }}>
-                  <TouchableOpacity style={styles.pickTime}>
+                <View style={{
+                    backgroundColor: Colors.white,
+                    borderRadius: 10,
+                    marginRight: 8,
+                    shadowOffset: {
+                      width: 0,
+                      height: 4,
+                      },
+                      shadowOpacity: 0.3,
+                      shadowRadius: 5,
+                      elevation: 1,
+                }}>
+                  <TouchableOpacity 
+                    style={styles.pickTime}
+                    onPress={() => {
+                      setShowDatePicker(true);
+                      setSelectedServiceStartTime(timeInfo.startTime)
+                      setSelectedServiceEndTime(timeInfo.endTime)
+                      //setSelectedServiceSlot(timeInfo.availableSlot - 1)
+                    }}
+                  >
                     <Text>
-                      {timeInfo.startTime} - {timeInfo.endTime}
+                      {timeInfo.startTime} - {timeInfo.endTime} 
+                    </Text>
+                    <Text>
+                      Slot Left: {timeInfo.availableSlot}
                     </Text>
                   </TouchableOpacity>
                 </View>
               );
             })}
-
-           <Text>
-           </Text>
           </View>
+        </View>
+        <View style={{ paddingVertical: 20 }}>
+          <Text style={{
+            fontSize: 20,
+            fontWeight: '500',
+          }}>
+            Service Reservation Selected
+          </Text>
+          <View style={{ flexDirection: 'row', paddingTop: 5 }}>
+            <Text style={{ fontSize: 17, fontWeight: '500', width: 145, }}>
+              Date Selected:
+            </Text>
+            <Text style={{ fontSize: 17, fontWeight: '500', width: 145, marginLeft: 15 }}>
+              Time Selected:
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row', paddingTop: 3 }}>
+            <View style={styles.selectedDateTime}>
+              <Text style={styles.selectedDateTimeText}>
+                {moment(selectedServiceDate).format('DD-MMM-YYYY')}
+              </Text>
+            </View>
+            <View style={[styles.selectedDateTime,{ marginLeft: 15 }]}>
+              <Text style={styles.selectedDateTimeText}>
+                {selectedServiceStartTime} - {selectedServiceEndTime}
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.bottomBar}>
+          <View>
+            <Text>
+              Amount To Pay: RM {serviceSelected.serviceDeposit}
+            </Text>
+          </View>
+          <TouchableOpacity style={styles.makeReservation}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+              Make Reservation
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -173,14 +242,46 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     borderWidth: 1,
     borderRadius: 10,
+  },
+  selectedDateTime: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    height: 35,
+    width: 145,
+    backgroundColor: Colors.white,
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 5,
       },
-      shadowOpacity: 0.3,
-      shadowRadius: 5,
-      elevation: 1,
+      shadowOpacity: 0.4,
+      shadowRadius: 10,
+      elevation: 2,
   },
-
+  selectedDateTimeText: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  bottomBar: {
+    width: '100%',
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderRadius: 10,
+    backgroundColor: Colors.white,
+    shadowOffset: {
+      width: 0,
+      height: 5,
+      },
+      shadowOpacity: 0.4,
+      shadowRadius: 10,
+      elevation: 2,
+  },
+  makeReservation: {
+    borderWidth: 1,
+    flexWrap: 'wrap',
+  }
 });
 export default ServiceDetailsScreen

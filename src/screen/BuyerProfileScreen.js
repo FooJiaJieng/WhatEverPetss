@@ -21,7 +21,6 @@ const EDIT_PROFILE = {
 const [editProfile, setEditProfile] = useState(EDIT_PROFILE.NO);
 
 const [userName, setUserName] = useState('');
-const [storeName, setStoreName] = useState('');
 const [contactNo, setContactNo] = useState('');
 const [userWallet, setUserWallet] = useState(0);
 
@@ -34,7 +33,6 @@ const userSelected = CommonStore.useState(s => s.userSelected);
 
 useEffect(() => {
     setUserName(userSelected.userName);
-    setStoreName(userSelected.storeName);
     setContactNo(userSelected.contactNo);
     setUserWallet(userSelected.walletAmount);
 },[userSelected, topUpWallet])
@@ -55,7 +53,6 @@ const updateUserInfo = async () => {
   const userRef = doc(db, 'User', userSelected.uniqueID);
   await updateDoc(userRef, {
     userName: userName,
-    storeName: storeName,
     contactNo: contactNo,
   })
   Alert.alert('Success', 'Update Successfully');
@@ -131,10 +128,10 @@ navigation.setOptions({
             }}
           />
         </View>
-    </TouchableOpacity>
-    :
-    null }
-    </View>
+      </TouchableOpacity>
+      :
+      null }
+      </View>
     ),
   });
 
@@ -314,18 +311,6 @@ navigation.setOptions({
               </View>
               <View style={{ paddingTop: 5 }}>
                 <Text style={styles.text}>
-                  Store Name
-                </Text>
-                <TextInput
-                  style={styles.textInput}
-                  onChangeText={(text) => {
-                    setStoreName(text);
-                  }}
-                  value={storeName}
-                />
-              </View>
-              <View style={{ paddingTop: 5 }}>
-                <Text style={styles.text}>
                   Contact Number
                 </Text>
                 <TextInput
@@ -349,7 +334,7 @@ navigation.setOptions({
                   }}
                 >
                   <Text style= {{ fontSize: 17, fontWeight: '500' }}>
-                    {(userSelected.walletAmount).toFixed(2)}
+                    {userWallet.toFixed(2)}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -372,7 +357,9 @@ navigation.setOptions({
                     shadowRadius: 5,
                     elevation: 1,
                 }}
-                 onPress={() => { updateUserInfo() }}
+                 onPress={() => {
+                   updateUserInfo()
+                 }}
                 >
                 <Text style={styles.text1}>
                   UPDATE

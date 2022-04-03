@@ -16,7 +16,7 @@ import HomeScreen from './src/screen/HomeScreen';
 import LoginScreen from './src/screen/LoginScreen';
 import BuyerProfileScreen from './src/screen/BuyerProfileScreen';
 import SellerProfileScreen from './src/screen/SellerProfileScreen';
-import SellerStoreScreen from './src/screen/SellerStore';
+import SellerStoreScreen from './src/screen/SellerStoreScreen';
 import AddProductScreen from './src/screen/AddProductScreen';
 import ServiceDetailsScreen from './src/screen/ServiceDetailsScreen';
 

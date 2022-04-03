@@ -40,7 +40,7 @@ const serviceSelectedEdit = CommonStore.useState(s => s.serviceSelectedEdit);
 
  useEffect(() => {
     var tempMyService = [];
-    for (var i = 0; i < serviceList.length; i++ ){
+    for (var i = 0; i < serviceList.length; i++) {
         if (serviceList[i].sellerID === userSelected.uniqueID) {
             const myService = serviceList[i]
             tempMyService.push(myService);
