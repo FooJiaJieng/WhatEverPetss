@@ -19,6 +19,8 @@ import SellerProfileScreen from './src/screen/SellerProfileScreen';
 import SellerStoreScreen from './src/screen/SellerStoreScreen';
 import AddProductScreen from './src/screen/AddProductScreen';
 import ServiceDetailsScreen from './src/screen/ServiceDetailsScreen';
+import BuyerReceiptScreen from './src/screen/BuyerReceiptScreen';
+import CustomerOrderScreen from './src/screen/CustomerOrderScreen';
 
 
 //Firebase
@@ -50,6 +52,7 @@ function HomeScreenStack() {
     <Stack.Navigator>
       <Stack.Screen name='Home' component={HomeScreen} options={ headerOption }/>
       <Stack.Screen name='ServiceDetails' component={ServiceDetailsScreen} options={ headerOption }/>
+      <Stack.Screen name='BuyerReceipt' component={BuyerReceiptScreen} options={ headerOption }/>
     </Stack.Navigator>
   )
 };
@@ -68,6 +71,7 @@ function SellerScreenStack() {
       <Stack.Screen name='SellerProfile' component={SellerProfileScreen} options={ headerOption } />
       <Stack.Screen name='AddProduct' component={AddProductScreen} options={ headerOption } />
       <Stack.Screen name='SellerStore' component={SellerStoreScreen} options={ headerOption } />
+      <Stack.Screen name='CustomerOrder' component={CustomerOrderScreen} options={ headerOption } />
     </Stack.Navigator>
   );
 }
@@ -79,16 +83,16 @@ export default function App() {
   const serviceList = CommonStore.useState(s => s.serviceList);
   const userType = CommonStore.useState(s => s.userType);
 
-  const [userListTemp, setUserListTemp] = useState([]);
+  // const [userListTemp, setUserListTemp] = useState([]);
 
-  useEffect(() => {
-     onSnapshot(collection(db, 'Service'), (snapshot) => {
-      setUserListTemp(snapshot.docs.map((doc) => doc.data()))
-    });
-    CommonStore.update( s => {
-      s.serviceList = userListTemp
-    });
-  },[isLoggedIn]);
+  // useEffect(() => {
+  //    onSnapshot(collection(db, 'Service'), (snapshot) => {
+  //     setUserListTemp(snapshot.docs.map((doc) => doc.data()))
+  //   });
+  //   CommonStore.update( s => {
+  //     s.serviceList = userListTemp
+  //   });
+  // },[isLoggedIn]);
 
   //console.log(serviceList);
 

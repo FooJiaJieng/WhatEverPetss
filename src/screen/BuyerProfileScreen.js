@@ -269,6 +269,9 @@ navigation.setOptions({
             }}>
                     <TouchableOpacity
                          style={styles.FunctionButton}
+                         onPress={() => {
+                           navigation.navigate('BuyerReceipt')
+                         }}
                     >
                         <Text
                             style={styles.FunctionText}

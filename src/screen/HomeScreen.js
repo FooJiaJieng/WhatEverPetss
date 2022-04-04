@@ -3,17 +3,44 @@ import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView, Tex
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constant/Colors'
 import RNPickerSelect from 'react-native-picker-select';
+import moment from 'moment';
 import { CommonStore } from '../../store/CommonStore';
+import { CollectionFunc } from '../../util/CollectionFunc';
 
 const HomeScreen = props => {
+
+// const [selectedUserOrderList, setSelectedUserOrderList] = useState([]);
+const [searchService, setSearchService] = useState('');
+const [filterType, setFilterType] = useState('');
 
 const userSelected = CommonStore.useState(s => s.userSelected);
 const userList = CommonStore.useState(s => s.userList);
 const serviceList = CommonStore.useState(s => s.serviceList);
 const sellerServiceList = CommonStore.useState(s => s.sellerServiceList);
 const serviceSelected = CommonStore.useState(s => s.serviceSelected);
-
+const order = CommonStore.useState(s => s.order);
+const userOrderSelected = CommonStore.useState(s => s.userOrderSelected);
+const userReceiptSelected = CommonStore.useState(s => s.userReceiptSelected);
+const isLoggedIn = CommonStore.useState(s => s.isLoggedIn);
     
+useEffect(() => {
+    CollectionFunc();
+});
+
+// useEffect(() => {
+//     var myOrderTemp = [];
+//     for (var i = 0; i < order.length; i++) {
+//         if (order[i].userID === userSelected.uniqueID) {
+//             const myService = order[i]
+//             myOrderTemp.push(myService);
+//         }
+//     }
+//     setSelectedUserOrderList(myOrderTemp);
+//     CommonStore.update(s => {
+//         s.userOrderSelected = selectedUserOrderList;
+//     })
+// },[serviceSelected, userSelected, isLoggedIn, userReceiptSelected])
+
 const { navigation, route } = props;
 
 navigation.setOptions({
@@ -40,138 +67,76 @@ navigation.setOptions({
     ),
     });
 
-    const receipt = [
-        {
-            service: 'Grooming',
-            price: 100,
-            date: '10/10/2022'
-        },
-        {
-            service: 'Consultant',
-            price: 50,
-            date: '07/09/2022'
-        },
-        {
-            service: 'Consultant',
-            price: 50,
-            date: '07/09/2022'
-        },
-        {
-            service: 'Consultant',
-            price: 50,
-            date: '07/09/2022'
-        },
-        {
-            service: 'Consultant',
-            price: 50,
-            date: '07/09/2022'
-        },
-    ]
 
-    const renderReceipt =({item, index}) => {
-        return(
-            <TouchableOpacity style={{
-                width: 170,
-                height: 130,
-                padding: 5,
-                borderWidth: 1,
-                borderColor: '#E5E5E5',
-                borderRadius: 5,
-                marginRight: 10,
-                marginLeft: 5,
-                marginVertical: 5,
-                marginBottom: 10,
-                backgroundColor: Colors.lavender,
-                shadowOffset: {
-                    width: 0,
-                    height: 5,
-                    },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 5,
-                    elevation: 1,
-            }}>
-                <View>
-                    {/* <Image
-                        source={item.serviceImg}
-                        style={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: 50,
-                        borderWidth: 1,
-                        marginRight: 10,
-                        }}
-                    /> */}
-                </View>
-                <Text>{item.serviceName}</Text>
-                <Text>{item.serviceType}</Text>
-                <Text>{item.serviceDeposit}</Text>
-            </TouchableOpacity>
-        )
-    };
-
-    const renderSelectedService =({item, index}) => {
-        return(
-            <TouchableOpacity style={{
-                width: 170,
-                height: 130,
-                padding: 5,
-                borderWidth: 1,
-                borderColor: '#E5E5E5',
-                borderRadius: 5,
-                marginRight: 10,
-                marginLeft: 5,
-                marginVertical: 5,
-                marginBottom: 10,
-                backgroundColor: Colors.lavender,
-                shadowOffset: {
-                    width: 0,
-                    height: 5,
-                    },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 5,
-                    elevation: 1,
+const renderSelectedService =({item, index}) => {
+    return(
+        <TouchableOpacity style={{
+            width: 170,
+            height: 130,
+            padding: 5,
+            borderWidth: 1,
+            borderColor: '#E5E5E5',
+            borderRadius: 5,
+            marginRight: 10,
+            marginLeft: 5,
+            marginVertical: 5,
+            marginBottom: 10,
+            backgroundColor: Colors.lavender,
+            shadowOffset: {
+                width: 0,
+                height: 5,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: 5,
+                elevation: 1,
+        }}
+            onPress={() => {
+                navigation.navigate('ServiceDetails');
+                CommonStore.update( s => {
+                    s.serviceSelected = item;
+                });
+                console.log(serviceSelected)
             }}
-                onPress={() => {
-                    navigation.navigate('ServiceDetails');
-                    CommonStore.update( s => {
-                        s.serviceSelected = item;
-                    });
-                    console.log(serviceSelected)
-                }}
-            >
-                <View>
-                    {/* <Image
-                        source={item.serviceImg}
-                        style={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: 50,
-                        borderWidth: 1,
-                        marginRight: 10,
-                        }}
-                    /> */}
-                </View>
-                <Text>{item.serviceName}</Text>
-                <Text>{item.serviceType}</Text>
-                <Text>{item.serviceDeposit}</Text>
-            </TouchableOpacity>
-        )
-    };
+        >
+            <View>
+                <Image
+                    source={{uri: item.serviceImg}}
+                    style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 50,
+                    borderWidth: 1,
+                    marginRight: 10,
+                    }}
+                />
+            </View>
+            <Text style={{ fontSize: 16, fontWeight: '500' }} numberOfLines={1}>
+                {item.serviceName}
+            </Text>
+            <Text style={{ fontSize: 14, fontWeight: '500' }}>
+                Type: {item.serviceType}
+            </Text>
+            <Text style={{ fontSize: 16, fontWeight: '500' }}>
+                Deposit: RM {item.serviceDeposit}
+            </Text>
+        </TouchableOpacity>
+    )
+};
 
     return (
         <ScrollView
             style={{ padding: 1, backgroundColor: Colors.white }}
         >
 
-            <TouchableOpacity onPress={() => {
-                //NavigateToLoginScreenIfNotAuth();
-                console.log(userSelected);
-                console.log(serviceList);
-                // console.log(userList.length);
+            {/* <TouchableOpacity onPress={() => {
+                //console.log(userSelected);
+                //console.log(serviceList);
+                console.log('order');
+                console.log(selectedUserOrderList);
                 //console.log(userList);
                 
             }}><Text>hiiii</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <View style={{
                 padding: 5,
@@ -190,7 +155,7 @@ navigation.setOptions({
                     </Text>
                     <View>
                     </View>
-                    <TextInput
+                    {/* <TextInput
                         style={{
                             width: '100%',
                             height: 40,
@@ -206,9 +171,13 @@ navigation.setOptions({
                             elevation: 1,
                         }}
                         placeholder= "Let's get started, shall we?"
-                    />
+                        onChange={(text) => {
+                            setSearchService(text)
+                        }}
+                        value={searchService}
+                    /> */}
                 </View>
-                <View style={{
+                {/* <View style={{
                     paddingVertical: 5,
                     paddingTop: 10,
                 }}
@@ -220,13 +189,23 @@ navigation.setOptions({
                     }}>
                         Your Receipt
                     </Text>
+                    { selectedUserOrderList.length < 1 ?
+                    <View>
+                        <Text>
+                            - No Any Reservation Yet
+                        </Text>
+                    </View>    
+                    :
                     <FlatList
-                        data={receipt}
+                        data={selectedUserOrderList.slice(0).sort((a, b) => {
+                             return moment(b[selectedUserOrderList.createdAt]).valueOf() - moment(a[selectedUserOrderList.createdAt]).valueOf();
+                        })}
                         renderItem={renderReceipt}
                         keyExtractor={(item, index) => index.toString()}
                         horizontal={true}
                     />
-                </View>
+                    }
+                </View> */}
                 <View style={{
                     paddingBottom: 5,
                 }}
@@ -246,7 +225,24 @@ navigation.setOptions({
                         >
                             <TouchableOpacity style={[
                                 styles.ServicesCat
-                            ]}>
+                            ]}
+                                onPress={() => {
+                                    setFilterType('');
+                                }}
+                            >
+                                <Text style={[
+                                    styles.ServicesCatText
+                                ]}>
+                                    All
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={[
+                                styles.ServicesCat
+                            ]}
+                                onPress={() => {
+                                    setFilterType('Grooming');
+                                }}
+                            >
                                 <Text style={[
                                     styles.ServicesCatText
                                 ]}>
@@ -256,7 +252,11 @@ navigation.setOptions({
 
                             <TouchableOpacity style={[
                                 styles.ServicesCat
-                            ]}>
+                            ]}
+                                onPress={() => {
+                                    setFilterType('Veterinary');
+                                }}
+                            >
                                 <Text style={[
                                     styles.ServicesCatText
                                 ]}>
@@ -266,17 +266,40 @@ navigation.setOptions({
 
                             <TouchableOpacity style={[
                                 styles.ServicesCat
-                            ]}>
+                            ]}
+                                onPress={() => {
+                                    setFilterType('Bath Only');
+                                }}
+                            >
                                 <Text style={[
                                     styles.ServicesCatText
                                 ]}>
-                                    Products
+                                    Bath Only
                                 </Text>
                             </TouchableOpacity>
                         </ScrollView>
                     </View>
                     <FlatList
-                        data={serviceList}
+                        // data={serviceList.filter((item) => {
+                        //     if (searchService !== '') {
+                        //         var searchUpperCase = searchService.toUpperCase();
+
+                        //         if (item.servicename.toUpperCase().includes(searchUpperCase)) {
+                        //         return true;
+                        //         } else {
+                        //         return false;
+                        //         }
+                        // } else {
+                        //     return true;
+                        //     }}
+                        // )}
+                        data={serviceList.filter((item) => {
+                            if (filterType === item.serviceType) {
+                                return true
+                            } else if (filterType === '') {
+                                return true
+                            }
+                        })}
                         renderItem={renderSelectedService}
                         keyExtractor={(item, index) => index.toString()}
                         //horizontal={true}

@@ -15,6 +15,7 @@ import {
 import Colors from '../constant/Colors';
 import { CommonStore } from '../../store/CommonStore';
 import { v4 as uuidv4 } from 'uuid';
+import { CollectionFunc } from '../../util/CollectionFunc';
 
 //Firebase
 import { authentication, db } from '../../constants/key';
@@ -49,22 +50,10 @@ const [userListTemp, setUserListTemp] = useState([]);
 const [serviceListTemp, setServiceListTemp] = useState([]);
 const [isRegisterScreen, setIsRegisterScreen] = useState(false);
 
-const que = query(collection(db, "User"));
-const getUsersInfo = onSnapshot(que, (querySnapshot) => {
-  const usersInfoTemp = [];
-  querySnapshot.forEach((doc) => {
-    usersInfoTemp.push(doc.data());
-  });
-  setUserListTemp(usersInfoTemp);
-})
 
 useEffect(() => {
-  getUsersInfo();
-},[])
-
-useEffect(() => {
-  CommonStore.update(s => { s.userList = userListTemp })
-},[userListTemp]);
+  CollectionFunc();
+});
 
 
 const registerUserAcc = async () => {

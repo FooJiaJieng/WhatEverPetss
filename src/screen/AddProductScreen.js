@@ -110,6 +110,8 @@ const updateExistService = async () => {
     const userRef = doc(db, 'Service', serviceSelectedEdit.uniqueID);
     await updateDoc(userRef, {
         serviceStoreName: userSelected.storeName,
+        serviceStoreContactNo: userSelected.storeContactNo,
+        serviceStoreAddress: userSelected.storeAddress,
         serviceName: serviceName,
         serviceDescription: serviceDescription,
         serviceType: serviceCat,
@@ -142,8 +144,10 @@ const createNewService = async () => {
 
     var body = {
         uniqueID: uuidv4(),
-        serviceImg: 'https://thumbs.dreamstime.com/b/repair-service-concept-d-illustration-isolated-white-background-142416211.jpg',
+        serviceImg: 'https://media.istockphoto.com/photos/group-of-pets-posing-around-a-border-collie-dog-cat-ferret-rabbit-picture-id1296353202?s=170667a',
         serviceName: serviceName,
+        serviceStoreContactNo: userSelected.storeContactNo,
+        serviceStoreAddress: userSelected.storeAddress,
         serviceDescription: serviceDescription,
         serviceType: serviceCat,
         serviceDeposit: serviceDeposit,
@@ -192,7 +196,7 @@ const renderServiceTimeInfo = ({item, index}) => {
                             ),
                         );
                     }}
-                    value={serviceTimeInfo[index].availableSlot}
+                    value={serviceTimeInfo[index].availableSlot === 0 ? '0' : serviceTimeInfo[index].availableSlot}
                 />
             </View>
             <View style={{ width: '30%', paddingRight: 8 }}>
@@ -305,7 +309,7 @@ return (
                 paddingVertical: 5, 
             }}>
                 <Image
-                    source={require('../assets/image/YuruCampCamp.png')}
+                    source={{ uri: 'https://media.istockphoto.com/photos/group-of-pets-posing-around-a-border-collie-dog-cat-ferret-rabbit-picture-id1296353202?s=170667a'}}
                     style={{ width: 120, height: 120, borderWidth: 1, borderColor: '#E5E5E5', borderRadius: 5, }}
                 />
             </View>
@@ -406,9 +410,9 @@ return (
                         placeholder={'Service Type'}
                         placeholderStyle={{ color: Colors.black }}
                         items={[
-                            { label: 'Bath Only', value: 'bathonly' },
-                            { label: 'Grooming', value: 'grooming' },
-                            { label: 'Veterinaty', value: 'veterinary' }
+                            { label: 'Bath Only', value: 'Bath Only' },
+                            { label: 'Grooming', value: 'Grooming' },
+                            { label: 'Veterinaty', value: 'Veterinary' }
                         ]}
                         value={serviceCat}
                         onValueChange={(value) => {

@@ -38,15 +38,15 @@ const userSelected = CommonStore.useState(s => s.userSelected);
 const isLoggedIn = CommonStore.useState(s => s.isLoggedIn);
 const serviceSelectedEdit = CommonStore.useState(s => s.serviceSelectedEdit);
 
- useEffect(() => {
-    var tempMyService = [];
+useEffect(() => {
+    var myServiceTemp = [];
     for (var i = 0; i < serviceList.length; i++) {
         if (serviceList[i].sellerID === userSelected.uniqueID) {
             const myService = serviceList[i]
-            tempMyService.push(myService);
+            myServiceTemp.push(myService);
         }
     }
-    setSelectedUserServiceList(tempMyService);
+    setSelectedUserServiceList(myServiceTemp);
 },[isLoggedIn, serviceList, userSelected])
 
 
@@ -104,30 +104,44 @@ const renderStoreService =({item, index}) => {
                 }}
             >
                 <View style={{ flexDirection: 'row' }}>
-                    <View>
+                    <View style= {{ width: '25%' }}>
                         <Image
                             style={{
                                 borderRadius: 10,
-                                width: 80,
-                                height: 80,
+                                width: '100%',
+                                height: '100%',
                             }}
                             source={{uri: item.serviceImg}}
                         />
                     </View>
-                    <View>
-                        <View>
-                            <Text>
+                    <View style={{ paddingHorizontal: 5, width: '75%', }}>
+                        <View style={{ flexDirection: 'row', paddingBottom: 5 }}>
+                            <Text style={{ fontSize: 18, fontWeight: '500' }} numberOfLines={1}>
                                 {item.serviceName}
                             </Text>
                         </View>
-                        <View>
-                            <Text>
+                        <View style={{ flexDirection: 'row', paddingVertical: 2 }}>
+                            <Text style={{ fontSize: 16, fontWeight: '500', width: '30%' }}>
+                                Type:
+                            </Text>
+                            <Text style={{ fontSize: 16, fontWeight: '500', width: '70%' }}>
+                                {item.serviceType}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingVertical: 2 }}>
+                            <Text style={{ fontSize: 16, fontWeight: '500', width: '30%' }}>
+                                Desc: 
+                            </Text>
+                            <Text style={{ fontSize: 16, fontWeight: '500', width: '70%' }} numberOfLines={2}>
                                 {item.serviceDescription}
                             </Text>
                         </View>
-                        <View>
-                            <Text>
-                                Deposit (RM): {item.serviceDeposit}
+                        <View style={{ flexDirection: 'row', paddingVertical: 2 }}>
+                            <Text style={{ fontSize: 16, fontWeight: '500', width: '30%' }}>
+                                Deposit:
+                            </Text>
+                            <Text style={{ fontSize: 16, fontWeight: '500', width: '70%' }}>
+                                RM{item.serviceDeposit}
                             </Text>
                         </View>
                     </View>
@@ -163,7 +177,7 @@ export default SellerStoreScreen
 const styles = StyleSheet.create({
     renderService: {
         width: '100%',
-        height: 150,
+        height: 130,
         padding: 8,
         borderWidth: 1,
         borderColor: '#E5E5E5',

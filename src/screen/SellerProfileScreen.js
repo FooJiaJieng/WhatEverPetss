@@ -157,6 +157,19 @@ navigation.setOptions({
                 <TouchableOpacity
                       style={styles.FunctionButton}
                       onPress={() => {
+                        navigation.navigate('CustomerOrder')
+                      }}
+                >
+                    <Text
+                        style={styles.FunctionText}
+                    >
+                        Customer Order
+                    </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                      style={styles.FunctionButton}
+                      onPress={() => {
                       CommonStore.update(s => {
                         s.serviceSelectedEdit = null;
                       });
