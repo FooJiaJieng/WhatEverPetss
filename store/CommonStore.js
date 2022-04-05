@@ -15,6 +15,9 @@ export const CommonStore = new Store({
     serviceSelected: null,
     serviceSelectedEdit: null,
 
+    storeSelected: {},
+    storeSelectedService: [],
+
     order: [], //All Order
     userOrderSelected: [], //Selected User Order Bought
     userReceiptSelected: {}, //Selected User Order Bought Selected
@@ -22,14 +25,3 @@ export const CommonStore = new Store({
     customerOrderList: [], //Customer All Order
     customerOrderSelected: {}, //Customer Order Selected
 });
-
-export const ServiceStatus = [
-    { 
-        name: 'Arrived', 
-        id: 'ARRIVED',
-    },
-    { 
-        name: 'Cancelled', 
-        id: 'CANCELLED',
-    },
-]

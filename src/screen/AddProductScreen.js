@@ -196,7 +196,7 @@ const renderServiceTimeInfo = ({item, index}) => {
                             ),
                         );
                     }}
-                    value={serviceTimeInfo[index].availableSlot === 0 ? '0' : serviceTimeInfo[index].availableSlot}
+                    value={serviceTimeInfo[index].availableSlot < 1 ? '0' : serviceTimeInfo[index].availableSlot}
                 />
             </View>
             <View style={{ width: '30%', paddingRight: 8 }}>
@@ -244,6 +244,34 @@ const renderServiceTimeInfo = ({item, index}) => {
                     }}
                     value={serviceTimeInfo[index].endTime}
                 />
+                {/* <TouchableOpacity onPress={() => { setShowStartTimePicker(true)}}>
+                    <Text>
+                        {serviceTimeInfo[index].endTime}
+                    </Text>
+                </TouchableOpacity> */}
+            
+             {/* <DateTimePicker
+                        isVisible={showStartTimePicker}
+                        mode={'time'}
+                        onConfirm={(time)=>{
+                            console.log('Pressed')
+                            setServiceTimeInfo(
+                                serviceTimeInfo.map((serviceInfo, i) =>
+                                  i === index
+                                    ? {
+                                        ...serviceInfo,
+                                        endTime: time,
+                                        isChanged: true,
+                                      }
+                                    : serviceInfo,
+                                ),
+                            );
+                            setShowStartTimePicker(false)
+                        }}
+                        onCancel={() => {
+                        }}
+                        minuteInterval={10}
+                    />  */}
             </View>
         </View>
     )
@@ -303,14 +331,14 @@ return (
         <View style={{
                 padding: 10,
                 //paddingHorizontal: 10,
-                backgroundColor: Colors.white
+                backgroundColor: Colors.white,
         }}>
             <View style={{
                 paddingVertical: 5, 
             }}>
                 <Image
                     source={{ uri: 'https://media.istockphoto.com/photos/group-of-pets-posing-around-a-border-collie-dog-cat-ferret-rabbit-picture-id1296353202?s=170667a'}}
-                    style={{ width: 120, height: 120, borderWidth: 1, borderColor: '#E5E5E5', borderRadius: 5, }}
+                    style={{ width: '100%', height: 140, borderWidth: 1, borderColor: '#E5E5E5', borderRadius: 5, }}
                 />
             </View>
             <View style={{
@@ -363,16 +391,21 @@ return (
                 ]}>
                     Deposit
                 </Text>
-                <TextInput
-                    style={[
-                        styles.textInput
-                    ]}
-                    placeholder={'RM'}
-                    onChangeText={(text)=>{
-                        setServiceDeposit(text)
-                    }}
-                    value={serviceDeposit}
-                />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={styles.text}>
+                        RM{' '}
+                    </Text>
+                    <TextInput
+                        style={[
+                            styles.textInput
+                        ,{ width: '40%' }]}
+                        placeholder={'RM'}
+                        onChangeText={(text)=>{
+                            setServiceDeposit(text)
+                        }}
+                        value={serviceDeposit}
+                    />
+                </View>
             </View>
             <View style={{
                 paddingVertical: 5,
@@ -431,7 +464,7 @@ return (
                     ]}>
                         Duration For Each Service
                     </Text>
-                    <Text>
+                    <Text style={{ fontWeight: '800', fontSize: 16 }}>
                         {' '}*Minutes
                     </Text>
                 </View>
@@ -439,7 +472,7 @@ return (
                     style={[
                         styles.textInput
                     ,{ width: '40%' }]}
-                    placeholder={'Duration'}
+                    placeholder={'Duration (Minutes)'}
                     onChangeText={(text)=>{
                         setServiceDuration(text)
                     }}

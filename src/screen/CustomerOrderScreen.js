@@ -260,6 +260,14 @@ navigation.setOptions({
            </View>
            <View style={styles.view}>
                <Text style={{ fontSize: 16, fontWeight: '500' }}>
+                 Customer Contact:
+               </Text>
+               <Text style={{ fontSize: 16, fontWeight: '400' }}>
+                 {customerOrderSelected.contactNo}
+               </Text>
+           </View>
+           <View style={styles.view}>
+               <Text style={{ fontSize: 16, fontWeight: '500' }}>
                  Service Type:
                </Text>
                <Text style={{ fontSize: 16, fontWeight: '400' }}>
@@ -295,7 +303,7 @@ navigation.setOptions({
                {moment(customerOrderSelected.serviceDate).format('DD-MMM-YYYY')}
              </Text>
            </View>
-           <View style={{ paddingTop: 5}}>
+           <View style={{ paddingTop: 5 }}>
              <Text style={{ fontSize: 16, fontWeight: '500' }}>
                Time Selected:
              </Text>

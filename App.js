@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native';
 import Colors from './src/constant/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { CommonStore } from './store/CommonStore';
 
 
@@ -21,7 +22,7 @@ import AddProductScreen from './src/screen/AddProductScreen';
 import ServiceDetailsScreen from './src/screen/ServiceDetailsScreen';
 import BuyerReceiptScreen from './src/screen/BuyerReceiptScreen';
 import CustomerOrderScreen from './src/screen/CustomerOrderScreen';
-
+import StoreServiceScreen from './src/screen/StoreServiceScreen';
 
 //Firebase
 import { collection, getDocs, query, onSnapshot, setDoc, doc } from 'firebase/firestore';
@@ -53,6 +54,7 @@ function HomeScreenStack() {
       <Stack.Screen name='Home' component={HomeScreen} options={ headerOption }/>
       <Stack.Screen name='ServiceDetails' component={ServiceDetailsScreen} options={ headerOption }/>
       <Stack.Screen name='BuyerReceipt' component={BuyerReceiptScreen} options={ headerOption }/>
+      <Stack.Screen name='StoreService' component={StoreServiceScreen} options={ headerOption }/>
     </Stack.Navigator>
   )
 };
@@ -70,8 +72,15 @@ function SellerScreenStack() {
     <Stack.Navigator>
       <Stack.Screen name='SellerProfile' component={SellerProfileScreen} options={ headerOption } />
       <Stack.Screen name='AddProduct' component={AddProductScreen} options={ headerOption } />
-      <Stack.Screen name='SellerStore' component={SellerStoreScreen} options={ headerOption } />
       <Stack.Screen name='CustomerOrder' component={CustomerOrderScreen} options={ headerOption } />
+    </Stack.Navigator>
+  );
+}
+
+function SellerStoreScreenStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name='SellerStore' component={SellerStoreScreen} options={ headerOption } />
     </Stack.Navigator>
   );
 }
@@ -155,13 +164,13 @@ export default function App() {
           //tabBarVisible: false,
           tabBarIcon: ({ focused, color, size }) => {
 
-            if (route.name === 'Seller') {
+            if (route.name === 'SellerStore') {
               return (
-                <Ionicons name={'menu'} size={25} />
+                <MaterialCommunityIcons name={'store'} size={32} />
               );
-            } else if (route.name === 'Chat') {
+            } else if (route.name === 'SellerProfile') {
               return (
-                <Ionicons name={'chatbox-ellipses-outline'} size={25} />
+                <Ionicons name={'menu'} size={32} />
               );
             }
 
@@ -170,8 +179,8 @@ export default function App() {
           
           },
         })}>
+          <Tab.Screen name="SellerStore" component={SellerStoreScreenStack} options={{ headerShown: false }}/>
           <Tab.Screen name="SellerProfile" component={SellerScreenStack} options={{ headerShown: false }}/>
-          {/* <Tab.Screen name="Chat" component={ChatScreenStack} options={{ headerShown:  false }}/> */}
         </Tab.Navigator>
       :
       <Stack.Navigator>

@@ -55,9 +55,9 @@ const { navigation, route } = props;
 navigation.setOptions({
     headerLeft: () => (
     <TouchableOpacity onPress={() => {
-        navigation.goBack();
+        //navigation.goBack();
     }}>
-        <View style={{
+        {/* <View style={{
             justifyContent: 'center',
             paddingLeft: 0,
         }}>
@@ -68,7 +68,7 @@ navigation.setOptions({
             style={{
             }}
             />
-        </View>
+        </View> */}
     </TouchableOpacity>
     ),
     headerTitle: () => (

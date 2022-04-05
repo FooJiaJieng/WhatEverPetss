@@ -141,7 +141,7 @@ navigation.setOptions({
               paddingHorizontal: 10,
               paddingTop: 5,
             }}>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                       style={styles.FunctionButton}
                       onPress={() => {
                         navigation.navigate('SellerStore')
@@ -152,7 +152,7 @@ navigation.setOptions({
                     >
                         My Store
                     </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 <TouchableOpacity
                       style={styles.FunctionButton}

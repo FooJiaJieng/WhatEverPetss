@@ -96,6 +96,7 @@ const createServiceOrder = async () => {
       sellerID: serviceSelected.sellerID,
       userID: userSelected.uniqueID,
       userName: userSelected.userName,
+      userContactNo: userSelected.contactNo,
       orderStatus: 'ORDERED',
     }
 
@@ -257,6 +258,14 @@ navigation.setOptions({
                 fontWeight: '600',
               }}>
                 {serviceSelected.serviceName}
+              </Text>
+          </View>
+          <View style={styles.view}>
+              <Text style={{ fontSize: 16, fontWeight: '500' }}>
+                Contact Number:
+              </Text>
+              <Text style={{ fontSize: 16, fontWeight: '400' }}>
+                
               </Text>
           </View>
           <View style={styles.view}>
