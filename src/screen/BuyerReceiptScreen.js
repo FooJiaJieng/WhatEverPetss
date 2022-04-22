@@ -34,6 +34,8 @@ const VIEW_PURCHASE_HISTORY = {
 
 const [viewPurchaseHistorySelected, setViewPurchaseHistorySelected] = useState(VIEW_PURCHASE_HISTORY.NO);
 const [selectedUserOrderList, setSelectedUserOrderList] = useState([]);
+const [filterType, setFilterType] = useState('');
+
 
 const userSelected = CommonStore.useState(s => s.userSelected);
 const userReceiptSelected = CommonStore.useState(s => s.userReceiptSelected);
@@ -119,12 +121,12 @@ const renderReceipt =({item, index}) => {
     <View style={{ padding: 10, paddingHorizontal: 15, marginBottom: 3 }}>
       <TouchableOpacity style={{
           width: '100%',
-          height: 120,
+          height: 160,
           padding: 5,
           borderWidth: 1,
           borderColor: '#E5E5E5',
           borderRadius: 5,
-          backgroundColor: Colors.lavender,
+          backgroundColor: Colors.lavenderBlush,
           shadowOffset: {
               width: 0,
               height: 5,
@@ -141,25 +143,58 @@ const renderReceipt =({item, index}) => {
           }}
       >
           <View>
-              {/* <Image
-                  source={item.serviceImg}
-                  style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 50,
-                  borderWidth: 1,
-                  marginRight: 10,
-                  }}
-              /> */}
+            <Text style={styles.text1}>
+              Order Date: {moment(item.createdAt).format('DD-MMM-YYYY')}
+            </Text>
           </View>
-          <Text>{moment(item.createdAt).format('DD-MMM-YYYY')}</Text>
-          <Text>{item.serviceName}</Text>
-          <Text>{item.serviceType}</Text>
-          <Text>{moment(item.serviceDate).format('DD-MMM-YYYY')}</Text>
-          <Text>{item.serviceStartTime} - {item.serviceEndTime}</Text>
-          <Text>RM {item.serviceDeposit}</Text>
-          <Text>{moment(item.createdAt).format('DD-MMM-YYYY hh:mm')}</Text>
-          <Text>{item.orderStatus}</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <View>
+                <Image
+                    source={{uri: item.serviceImg}}
+                    style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    marginRight: 10,
+                    }}
+                />
+            </View>
+            <View>
+              <Text style={styles.text}>
+                {item.serviceName}
+              </Text>
+              <Text style={styles.text1}>
+                {item.sellerContactNo}
+              </Text>
+              <Text style={styles.text1}>
+                Service Type: {item.serviceType}
+              </Text>
+            </View>
+          </View>
+         
+          <Text style={styles.text1}>
+            Service Date: {moment(item.serviceDate).format('DD-MMM-YYYY')}
+          </Text>
+          <Text style={styles.text1}>
+            Service Time: {item.serviceStartTime} - {item.serviceEndTime}
+          </Text>
+          <View>
+            <Text style={styles.text}>
+              Deposit: RM{item.serviceDeposit}
+            </Text>
+          </View>
+          <View style={{ alignItems: 'flex-end' }}>
+            <Text style={{
+              fontSize: 17,
+              fontWeight: '700',
+              color: item.orderStatus == 'CANCELLED' ? 'red' :
+                     item.orderStatus == 'ARRIVED' ? Colors.mediumPurple :
+                     'black',
+            }}>
+              {item.orderStatus}
+            </Text>
+          </View>
       </TouchableOpacity>
     </View>
   )
@@ -226,14 +261,86 @@ navigation.setOptions({
     }}
     >
     { viewPurchaseHistorySelected === VIEW_PURCHASE_HISTORY.NO ?
+    <View>
+      <ScrollView style={{ height: 45 }}
+            horizontal={true}
+        >
+        <TouchableOpacity style={[
+            styles.orderCat
+        ,{
+            backgroundColor: filterType === '' ? Colors.mediumPurple : Colors.plum,
+        }]}
+            onPress={() => {
+                setFilterType('');
+            }}
+        >
+            <Text style={[
+                styles.orderCatText
+            ]}>
+                All
+            </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[
+            styles.orderCat
+        ,{
+            backgroundColor: filterType === 'ORDERED' ? Colors.mediumPurple : Colors.plum,
+        }]}
+            onPress={() => {
+                setFilterType('ORDERED');
+            }}
+        >
+            <Text style={[
+                styles.orderCatText
+            ]}>
+                Ordered
+            </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[
+            styles.orderCat
+        ,{
+            backgroundColor: filterType === 'ARRIVED' ? Colors.mediumPurple : Colors.plum,
+        }]}
+            onPress={() => {
+                setFilterType('ARRIVED');
+            }}
+        >
+            <Text style={[
+                styles.orderCatText
+            ]}>
+                Arrived
+            </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[
+            styles.orderCat
+        ,{
+            backgroundColor: filterType === 'CANCELLED' ? Colors.mediumPurple : Colors.plum,
+        }]}
+            onPress={() => {
+                setFilterType('CANCELLED');
+            }}
+        >
+            <Text style={[
+                styles.orderCatText
+            ]}>
+                Cancelled
+            </Text>
+        </TouchableOpacity>
+      </ScrollView>
       <FlatList
-          data={selectedUserOrderList.slice(0).sort((a, b) => {
-              return moment(b[selectedUserOrderList.createdAt]).valueOf() - moment(a[selectedUserOrderList.createdAt]).valueOf();
+          data={selectedUserOrderList.filter((item) => {
+              if (filterType === item.orderStatus) {
+                  return true
+              } else if (filterType === '') {
+                  return true
+              }
           })}
           renderItem={renderReceipt}
           keyExtractor={(item, index) => index.toString()}
           style={{ margin: -10 }}
       />
+    </View>
     :
     viewPurchaseHistorySelected === VIEW_PURCHASE_HISTORY.YES ?
      <View style={{ 
@@ -258,6 +365,14 @@ navigation.setOptions({
                 fontWeight: '600',
               }}>
                 {userReceiptSelected.serviceName}
+              </Text>
+          </View>
+          <View style={styles.view}>
+              <Text style={{ fontSize: 16, fontWeight: '500' }}>
+                Store Contact No:
+              </Text>
+              <Text style={{ fontSize: 16, fontWeight: '400' }}>
+                {userReceiptSelected.serviceStoreContactNo}
               </Text>
           </View>
           <View style={styles.view}>
@@ -293,15 +408,15 @@ navigation.setOptions({
             <Text style={{ fontSize: 16, fontWeight: '500' }}>
               Date Selected:
             </Text>
-            <Text>
+            <Text style={{ fontSize: 15, fontWeight: '500' }}>
               {moment(userReceiptSelected.serviceDate).format('DD-MMM-YYYY')}
             </Text>
           </View>
-          <View>
+          <View style={{ marginTop: 5 }}>
             <Text style={{ fontSize: 16, fontWeight: '500' }}>
               Time Selected:
             </Text>
-            <Text>
+            <Text style={{ fontSize: 15, fontWeight: '500' }}>
               {userReceiptSelected.serviceStartTime} - {userReceiptSelected.serviceEndTime}
             </Text>
           </View>
@@ -309,11 +424,17 @@ navigation.setOptions({
 
         <View style={{ marginTop: 20, paddingHorizontal: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
           <View>
-              <Text style={{ fontSize: 20, fontWeight: '500' }}>
+              <Text style={{ fontSize: 20, fontWeight: '500', marginBottom: 3, }}>
                 Status:
               </Text>
               <View style={styles.button}>
-                <Text style={{ fontSize: 22, fontWeight: '600' }}>
+                <Text style={{ 
+                  fontSize: 22, 
+                  fontWeight: '600',
+                  color: userReceiptSelected.orderStatus == 'CANCELLED' ? 'red' :
+                         userReceiptSelected.orderStatus == 'ARRIVED' ? Colors.mediumPurple :
+                         'black',
+                }}>
                   {userReceiptSelected.orderStatus}
                 </Text>
               </View>
@@ -398,5 +519,35 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.4,
       shadowRadius: 10,
       elevation: 2,
-  }
+  },
+  text: {
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  text1: {
+      fontSize: 16,
+      fontWeight: '500',
+      width: '100%',
+  },
+  orderCat: {
+    height: 30,
+    paddingHorizontal: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 15,
+    marginBottom: 8,
+    marginRight: 8,
+    backgroundColor: Colors.plum,
+    shadowOffset: {
+        width: 0,
+        height: 4,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 0.1,
+  },
+  orderCatText: {
+      fontSize: 16,
+      fontWeight: '600',
+  },
 })

@@ -15,22 +15,23 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
 import Colors from '../constant/Colors'
 import moment from 'moment';
 import { CommonStore } from '../../store/CommonStore';
 import { CollectionFunc } from '../../util/CollectionFunc';
 
-const StoreServiceScreen = () => {
+const StoreServiceScreen = props => {
 
 const [filterType, setFilterType] = useState('');
 const [storeService, setStoreService] = useState([]);
 
 const userSelected = CommonStore.useState(s => s.userSelected);
 const storeSelected = CommonStore.useState(s => s.storeSelected);    
-//const storeSelectedService = CommonStore.useState(s => s.storeSelectedService);
 const userOrderSelected = CommonStore.useState(s => s.userOrderSelected);
 const userReceiptSelected = CommonStore.useState(s => s.userReceiptSelected);
 const serviceList = CommonStore.useState(s => s.serviceList);
+const serviceSelected = CommonStore.useState(s => s.serviceSelected);
 
 
 useEffect(() => {
@@ -44,6 +45,10 @@ useEffect(() => {
     }
     //Selected Store Service is Stored here
     setStoreService(selectedStoreServiceTemp)
+    // CommonStore.update(s => {
+    //     s.storeSelectedService = storeService;
+    // })
+    //console.log(storeService.length)
 },[storeSelected, userReceiptSelected, userSelected])
 
 const renderSelectedService =({item, index}) => {
@@ -101,63 +106,170 @@ const renderSelectedService =({item, index}) => {
     )
 };
 
+const { navigation, route } = props;
+
+navigation.setOptions({
+    headerLeft: () => (
+      <TouchableOpacity style={{
+      }} 
+      onPress={() => { 
+        navigation.goBack()
+      }}>
+        <View style={{
+          justifyContent: 'center',
+          paddingLeft: 0,
+        }}>
+          <Ionicons
+            name="return-up-back-sharp"
+            size={30}
+            color='black'
+            style={{
+            }}
+          />
+        </View>
+    </TouchableOpacity>
+    ),
+    headerTitle: () => (
+      <View style={{
+        justifyContent: 'center',
+      }}>
+        <Text
+          style={{
+            fontSize: 24,
+            fontWeight: 'bold',
+            color: 'black',
+          }}>
+              Store Service
+        </Text>
+      </View>
+    ),
+    headerRight: () => (
+      <View>
+      </View>
+    ),
+});
+
   return (
-    <View style={{ backgroundColor: Colors.white, padding: 10 }}>
-        <View>
+    <ScrollView style={{
+        backgroundColor: Colors.white,
+        padding: 10,
+    }}>
+        <View style={{ }}>
+            <View style={{ width: '100%' }}>
+                <Image
+                    style={{
+                        height: 170,
+                        width: '100%',
+                        borderRadius: 5,
+                        borderWidth: 1,
+                    }}
+                    source={{uri: storeSelected.userImage}}
+                />
+            </View>
+            <View style={{ paddingTop: 5 }}>
+                <Text style={{
+                    fontSize: 24,
+                    fontWeight: '700',
+                }}>
+                    {storeSelected.storeName}
+                </Text>
+            </View>
+            <View style={{
+                flexDirection: 'row',
+                paddingVertical: 5,
+            }}>
+                <View style={{ width: '10%' }}>
+                    <Feather name='phone-call' size={20} color={Colors.mediumPurple} style={{ }}/>
+                </View>
+                <Text style={{
+                    fontSize: 18,
+                    fontWeight: '500',
+                    width: '89%'
+                }}>
+                    : {storeSelected.storeContactNo}
+                </Text>
+            </View>
+            <View style={{
+                flexDirection: 'row',
+                paddingVertical: 5,
+                //backgroundColor: 'red'
+            }}>
+                <View style={{ width: '10%' }}>
+                    <Ionicons name='location-outline' size={25} color={Colors.mediumPurple} style={{ }}/>
+                </View>
+                <Text style={{
+                    fontSize: 18,
+                    fontWeight: '500',
+                    width: '89%'
+                }}
+                >
+                    : {storeSelected.storeAddress}
+                </Text>
+            </View>
+        </View>
+        <View style={{ paddingTop: 10, }}>
             <ScrollView style={{
             }}
                 horizontal={true}
             >
                 <TouchableOpacity style={[
-                    styles.ServicesCat
-                ]}
+                    styles.servicesCat
+                ,{
+                    backgroundColor: filterType === '' ? Colors.mediumPurple : Colors.plum,
+                }]}
                     onPress={() => {
                         setFilterType('');
                     }}
                 >
                     <Text style={[
-                        styles.ServicesCatText
+                        styles.servicesCatText
                     ]}>
                         All
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[
-                    styles.ServicesCat
-                ]}
+                    styles.servicesCat
+                ,{
+                    backgroundColor: filterType === 'Grooming' ? Colors.mediumPurple : Colors.plum,
+                }]}
                     onPress={() => {
                         setFilterType('Grooming');
                     }}
                 >
                     <Text style={[
-                        styles.ServicesCatText
+                        styles.servicesCatText
                     ]}>
                         Grooming
                     </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={[
-                    styles.ServicesCat
-                ]}
+                    styles.servicesCat
+                ,{
+                    backgroundColor: filterType === 'Veterinary' ? Colors.mediumPurple : Colors.plum,
+                }]}
                     onPress={() => {
                         setFilterType('Veterinary');
                     }}
                 >
                     <Text style={[
-                        styles.ServicesCatText
+                        styles.servicesCatText
                     ]}>
                         Veterinary
                     </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={[
-                    styles.ServicesCat
-                ]}
+                    styles.servicesCat
+                ,{
+                    backgroundColor: filterType === 'Bath Only' ? Colors.mediumPurple : Colors.plum,
+                }]}
                     onPress={() => {
                         setFilterType('Bath Only');
                     }}
                 >
                     <Text style={[
-                        styles.ServicesCatText
+                        styles.servicesCatText
                     ]}>
                         Bath Only
                     </Text>
@@ -177,14 +289,15 @@ const renderSelectedService =({item, index}) => {
             //horizontal={true}
             numColumns={2}
         />
-    </View>
+        <View style={{ height: 50 }}/>
+    </ScrollView>
   )
 }
 
 export default StoreServiceScreen
 
 const styles = StyleSheet.create({
-    ServicesCat: {
+    servicesCat: {
         height: 30,
         paddingHorizontal: 8,
         alignItems: 'center',
@@ -201,7 +314,7 @@ const styles = StyleSheet.create({
             shadowRadius: 5,
             elevation: 0.1,
     },
-    ServicesCatText: {
+    servicesCatText: {
         fontSize: 15,
     },
 })

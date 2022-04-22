@@ -31,6 +31,7 @@ const SellerStoreScreen = props => {
 
 const [selectedUserServiceList, setSelectedUserServiceList] = useState({});
 const [serviceListTemp, setServiceListTemp] = useState([]);
+const [filterType, setFilterType] = useState('');
 
 const serviceList = CommonStore.useState(s => s.serviceList);
 const userList = CommonStore.useState(s => s.userList);
@@ -57,18 +58,7 @@ navigation.setOptions({
     <TouchableOpacity onPress={() => {
         //navigation.goBack();
     }}>
-        {/* <View style={{
-            justifyContent: 'center',
-            paddingLeft: 0,
-        }}>
-            <Ionicons
-            name="return-up-back-sharp"
-            size={30}
-            color='black'
-            style={{
-            }}
-            />
-        </View> */}
+        
     </TouchableOpacity>
     ),
     headerTitle: () => (
@@ -93,7 +83,7 @@ navigation.setOptions({
 
 const renderStoreService =({item, index}) => {
     return(
-        <View style={{ width: Dimensions.get('screen').width*0.96, paddingHorizontal: 5 }}>
+        <View style={{ width: '100%', paddingHorizontal: 5 }}>
             <TouchableOpacity
                 style={styles.renderService}
                 onPress={() => {
@@ -109,7 +99,7 @@ const renderStoreService =({item, index}) => {
                             style={{
                                 borderRadius: 10,
                                 width: '100%',
-                                height: '100%',
+                                height: 110,
                             }}
                             source={{uri: item.serviceImg}}
                         />
@@ -152,23 +142,98 @@ const renderStoreService =({item, index}) => {
 }
 
   return (
-    <View style={{ 
+    <ScrollView style={{ 
         backgroundColor: Colors.white,
         height: '100%',
+        paddingHorizontal: 10,
     }}>
         <View style={{
                 paddingVertical: 10,
                 //paddingHorizontal: 10,
                 backgroundColor: Colors.white,
-                alignItems: 'center'
+                //alignItems: 'center'
         }}>
+            <ScrollView style={{
+            }}
+                horizontal={true}
+            >
+                <TouchableOpacity style={[
+                    styles.servicesCat
+                ,{
+                    backgroundColor: filterType === '' ? Colors.mediumPurple : Colors.plum,
+                }]}
+                    onPress={() => {
+                        setFilterType('');
+                    }}
+                >
+                    <Text style={[
+                        styles.servicesCatText
+                    ]}>
+                        All
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[
+                    styles.servicesCat
+                ,{
+                    backgroundColor: filterType === 'Grooming' ? Colors.mediumPurple : Colors.plum,
+                }]}
+                    onPress={() => {
+                        setFilterType('Grooming');
+                    }}
+                >
+                    <Text style={[
+                        styles.servicesCatText
+                    ]}>
+                        Grooming
+                    </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={[
+                    styles.servicesCat
+                ,{
+                    backgroundColor: filterType === 'Veterinary' ? Colors.mediumPurple : Colors.plum,
+                }]}
+                    onPress={() => {
+                        setFilterType('Veterinary');
+                    }}
+                >
+                    <Text style={[
+                        styles.servicesCatText
+                    ]}>
+                        Veterinary
+                    </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={[
+                    styles.servicesCat
+                ,{
+                    backgroundColor: filterType === 'Bath Only' ? Colors.mediumPurple : Colors.plum,
+                }]}
+                    onPress={() => {
+                        setFilterType('Bath Only');
+                    }}
+                >
+                    <Text style={[
+                        styles.servicesCatText
+                    ]}>
+                        Bath Only
+                    </Text>
+                </TouchableOpacity>
+            </ScrollView>
             <FlatList
-                data={selectedUserServiceList}
+                data={selectedUserServiceList.filter((item) => {
+                    if (filterType === item.serviceType) {
+                        return true
+                    } else if (filterType === '') {
+                        return true
+                    }
+                })}
+                // data={selectedUserServiceList}
                 renderItem={renderStoreService}
                 keyExtractor={(item, index) => index.toString()}
             />
         </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -186,7 +251,7 @@ const styles = StyleSheet.create({
         //marginLeft: 5,
         marginVertical: 5,
         marginBottom: 10,
-        backgroundColor: Colors.lavender,
+        backgroundColor: Colors.lavenderBlush,
         shadowOffset: {
             width: 0,
             height: 5,
@@ -194,5 +259,25 @@ const styles = StyleSheet.create({
             shadowOpacity: 0.3,
             shadowRadius: 5,
             elevation: 1,
-    }
+    },
+    servicesCat: {
+        height: 30,
+        paddingHorizontal: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 15,
+        marginBottom: 8,
+        marginRight: 8,
+        backgroundColor: Colors.plum,
+        shadowOffset: {
+            width: 0,
+            height: 4,
+            },
+            shadowOpacity: 0.2,
+            shadowRadius: 5,
+            elevation: 0.1,
+    },
+    servicesCatText: {
+        fontSize: 15,
+    },
 })

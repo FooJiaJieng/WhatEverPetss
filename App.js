@@ -81,6 +81,7 @@ function SellerStoreScreenStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen name='SellerStore' component={SellerStoreScreen} options={ headerOption } />
+      <Stack.Screen name='AddProduct' component={AddProductScreen} options={ headerOption } />
     </Stack.Navigator>
   );
 }

@@ -63,7 +63,7 @@ const registerUserAcc = async () => {
                 // try {
                   var body = {
                     uniqueID: credentials.user.uid,
-                    userImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/640px-User_icon_2.svg.png',
+                    userImage: 'https://image.shutterstock.com/image-vector/man-icon-vector-260nw-1040084344.jpg',
                     userName: regName,
                     storeName: regName,
                     userEmail: regEmail,
@@ -72,18 +72,12 @@ const registerUserAcc = async () => {
                     storeAddress: '',
                     walletAmount: 0,
                     storeWallet: 0,
+                    serviceInStore: 0,
                     createdAt: Date.now(),
                     isActive: true,
                   }
                   await setDoc(doc(db, 'User', credentials.user.uid), body)
                   console.log('Successfully Added')
-                //   CommonStore.update(s => {
-                //     s.userID = credentials.user.uid;
-                //     s.userSelected = body;
-                // });
-                // } catch (error) {
-                //     alert(error)
-                // }
             })
             .catch((re) => {
                 console.log(re);
@@ -118,6 +112,7 @@ const loginUserAcc = () => {
         })
         .catch((re) => {
             console.log(re);
+            Alert.alert('Error', 'Invalid Email/Password')
         })
 }
 
@@ -289,7 +284,17 @@ const loginUserAcc = () => {
                   <TouchableOpacity
                     style={[styles.registerButton]}
                     onPress={() => {
-                      registerUserAcc();
+                      if (regName == '') {
+                        Alert.alert('Error', 'Please enter username')
+                      } else if (regEmail == '') {
+                        Alert.alert('Error', 'Please enter email')
+                      } else if (regPassword != regRepeatPassword) {
+                        Alert.alert('Error', 'The passwords are not match')
+                      } else if (regContactNo == '') {
+                        Alert.alert('Error', 'Please enter contact number')
+                      } else {
+                        registerUserAcc();
+                      }
                     }}
                   >
                     <Text style={{ fontSize: 20, fontWeight: '700' }}>

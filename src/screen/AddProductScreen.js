@@ -27,7 +27,7 @@ import { CommonStore } from '../../store/CommonStore';
 
 //Firebase
 import { authentication, db } from '../../constants/key';
-import { collection, getDocs, setDoc, doc, updateDoc, increment } from 'firebase/firestore';
+import { collection, getDocs, setDoc, doc, updateDoc, increment, deleteDoc, } from 'firebase/firestore';
 
 
 const AddProductScreen = props => {
@@ -139,6 +139,34 @@ const updateExistService = async () => {
       
 }
 
+const deleteService = async() => {
+    const userRef = doc(db, 'Service', serviceSelectedEdit.uniqueID);
+    await deleteDoc(userRef)
+        .then(() => {
+            Alert.alert(
+                'Delete',
+                'Successfully Deleted Service',
+                [{ text: 'OK', onPress: () => {
+                    navigation.goBack();
+                } }],
+                { cancelable: false },
+            );
+        })
+        .catch(error => {
+            // show an error alert
+            alert(error);
+        })
+}
+
+const updateServiceLength = async () => {
+    const userRef = doc(db, 'User', userSelected.uniqueID);
+    await updateDoc(userRef, {
+        serviceInStore: increment(1),
+    })
+    .then(() => {
+    })
+      
+}
 
 const createNewService = async () => {
 
@@ -176,8 +204,8 @@ const createNewService = async () => {
 
 const renderServiceTimeInfo = ({item, index}) => {
     return (
-        <View style={{ flexDirection: 'row', padding: 10, paddingTop: 5, width: Dimensions.get('screen').width }}>
-            <View style={{ width: '30%', paddingRight: 8 }}>
+        <View style={{ flexDirection: 'row', padding: 10, paddingTop: 5, width: Dimensions.get('screen').width, alignItems: 'center' }}>
+            <View style={{ width: '29%', paddingRight: 8 }}>
                 <TextInput
                     style={[
                         styles.textInput1
@@ -199,7 +227,7 @@ const renderServiceTimeInfo = ({item, index}) => {
                     value={serviceTimeInfo[index].availableSlot < 1 ? '0' : serviceTimeInfo[index].availableSlot}
                 />
             </View>
-            <View style={{ width: '30%', paddingRight: 8 }}>
+            <View style={{ width: '29%', paddingRight: 8 }}>
                     <TextInput
                         style={[
                             styles.textInput1
@@ -222,7 +250,7 @@ const renderServiceTimeInfo = ({item, index}) => {
                         value={serviceTimeInfo[index].startTime}
                     />
             </View>
-            <View style={{ width: '30%' }}>
+            <View style={{ width: '29%' }}>
                 <TextInput
                     style={[
                         styles.textInput1
@@ -244,34 +272,18 @@ const renderServiceTimeInfo = ({item, index}) => {
                     }}
                     value={serviceTimeInfo[index].endTime}
                 />
-                {/* <TouchableOpacity onPress={() => { setShowStartTimePicker(true)}}>
-                    <Text>
-                        {serviceTimeInfo[index].endTime}
-                    </Text>
-                </TouchableOpacity> */}
-            
-             {/* <DateTimePicker
-                        isVisible={showStartTimePicker}
-                        mode={'time'}
-                        onConfirm={(time)=>{
-                            console.log('Pressed')
-                            setServiceTimeInfo(
-                                serviceTimeInfo.map((serviceInfo, i) =>
-                                  i === index
-                                    ? {
-                                        ...serviceInfo,
-                                        endTime: time,
-                                        isChanged: true,
-                                      }
-                                    : serviceInfo,
-                                ),
-                            );
-                            setShowStartTimePicker(false)
-                        }}
-                        onCancel={() => {
-                        }}
-                        minuteInterval={10}
-                    />  */}
+            </View>
+            <View>
+                <TouchableOpacity
+                    onPress={() => {
+                        setServiceTimeInfo([
+                            ...serviceTimeInfo.slice(0, index),
+                            ...serviceTimeInfo.slice(index + 1),
+                        ])
+                    }}
+                >
+                    <Ionicons name='trash' size={25} color='red'/>
+                </TouchableOpacity>
             </View>
         </View>
     )
@@ -487,7 +499,7 @@ return (
                     <View style={{
                         flexDirection: 'row',
                         paddingBottom: 5,
-                        width: '30%',
+                        width: '29%',
                         paddingRight: 8,
                     }}>
                         <Text style={[
@@ -503,7 +515,7 @@ return (
                         </Text>
                     </View>
                     <View style={{
-                        width: '30%',
+                        width: '29%',
                         paddingRight: 8,
                     }}>
                         <Text style={[
@@ -513,7 +525,7 @@ return (
                         </Text>
                     </View>
                     <View style={{
-                        width: '30%',
+                        width: '29%',
                     }}>
                         <Text style={[
                             styles.text1
@@ -712,8 +724,9 @@ return (
                 paddingBottom: 20,
         }}>
             { serviceSelectedEdit ?
+            <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity style={{
-                    width: 130,
+                    width: 110,
                     height: 40,
                     //borderWidth: 1,
                     borderRadius: 5,
@@ -733,10 +746,45 @@ return (
                     }}
                 >
                     <Text style={ styles.text }>
-                        Update Service
+                        Update
                     </Text>
                 </TouchableOpacity>
-                :
+                <TouchableOpacity style={{
+                    width: 110,
+                    height: 40,
+                    //borderWidth: 1,
+                    marginLeft: 15,
+                    borderRadius: 5,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: Colors.aliceBlue,
+                    shadowOffset: {
+                        width: 0,
+                        height: 5,
+                        },
+                        shadowOpacity: 0.4,
+                        shadowRadius: 10,
+                        elevation: 2,
+                }}
+                    onPress={() => {
+                        Alert.alert('Alert', 'Delete Selected Service?',
+                            [{
+                                text: 'Delete', onPress:() => {
+                                    deleteService()
+                                }
+                            },
+                            {
+                                text: 'Cancel', onPress:() => {}
+                            }]
+                            );
+                    }}
+                >
+                    <Text style={[styles.text,{ color: 'red', fontWeight: '600' }]}>
+                        DELETE
+                    </Text>
+                </TouchableOpacity>
+            </View>
+            :
                 <TouchableOpacity style={{
                     width: 130,
                     height: 40,
@@ -754,11 +802,12 @@ return (
                         elevation: 2,
                 }}
                     onPress={() => {
-                        createNewService()
+                        createNewService();
+                        updateServiceLength();
                     }}
                 >
                     <Text style={ styles.text }>
-                        Upload Service
+                        Upload
                     </Text>
                 </TouchableOpacity>
             }

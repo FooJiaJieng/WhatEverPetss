@@ -22,6 +22,7 @@ const VIEW_CUST_ORDER = {
 
 const [viewCustOrderSelected, setViewCustOrderSelected] = useState(VIEW_CUST_ORDER.NO);
 const [custOrderList, setCustOrderList] = useState([]);
+const [filterType, setFilterType] = useState('');
 
 const userSelected = CommonStore.useState(s => s.userSelected);
 const userList = CommonStore.useState(s => s.userList);
@@ -50,32 +51,7 @@ useEffect(() => {
     console.log(order)
 },[userSelected, isLoggedIn, customerOrderSelected])
 
-// const cancelOrder = async () => {
-//     const orderRef = doc(db, 'Order', customerOrderSelected.uniqueID);
-//     await updateDoc(orderRef, {
-//         orderStatus: 'CANCELLED'
-//     })
-//     .then(() => {
-//         Alert.alert(
-//         'Cancelled',
-//         'You have cancelled the service',
-//         [{ text: 'OK', onPress: () => {
-//             navigation.goBack();
-//         } }],
-//         { cancelable: false },
-//     );
-//     })
-// }
   
-// const returnMoneyToWallet = async () => {
-//     const userRef = doc(db, 'User', userSelected.uniqueID);
-//     await updateDoc(userRef, {
-//         walletAmount: increment(userReceiptSelected.serviceDeposit),
-//     })
-//     .then(() => {
-
-//     })
-// }
 
 const renderCustOrder = ({item, index}) => {
     return (
@@ -216,14 +192,86 @@ navigation.setOptions({
             backgroundColor: Colors.white
     }}>
      { viewCustOrderSelected === VIEW_CUST_ORDER.NO ?
+     <View style={{ padding: 2,  }}>
+        <ScrollView style={{ height: 45 }}
+            horizontal={true}
+        >
+          <TouchableOpacity style={[
+              styles.orderCat
+          ,{
+              backgroundColor: filterType === '' ? Colors.mediumPurple : Colors.plum,
+          }]}
+              onPress={() => {
+                  setFilterType('');
+              }}
+          >
+              <Text style={[
+                  styles.orderCatText
+              ]}>
+                  All
+              </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[
+              styles.orderCat
+          ,{
+              backgroundColor: filterType === 'ORDERED' ? Colors.mediumPurple : Colors.plum,
+          }]}
+              onPress={() => {
+                  setFilterType('ORDERED');
+              }}
+          >
+              <Text style={[
+                  styles.orderCatText
+              ]}>
+                  Ordered
+              </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[
+              styles.orderCat
+          ,{
+              backgroundColor: filterType === 'ARRIVED' ? Colors.mediumPurple : Colors.plum,
+          }]}
+              onPress={() => {
+                  setFilterType('ARRIVED');
+              }}
+          >
+              <Text style={[
+                  styles.orderCatText
+              ]}>
+                  Arrived
+              </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[
+              styles.orderCat
+          ,{
+              backgroundColor: filterType === 'CANCELLED' ? Colors.mediumPurple : Colors.plum,
+          }]}
+              onPress={() => {
+                  setFilterType('CANCELLED');
+              }}
+          >
+              <Text style={[
+                  styles.orderCatText
+              ]}>
+                  Cancelled
+              </Text>
+          </TouchableOpacity>
+        </ScrollView>
         <FlatList
-            data={custOrderList.slice(0).sort((a, b) => {
-                return moment(b[custOrderList.createdAt]).valueOf() - moment(a[custOrderList.createdAt]).valueOf();
-            })}
+            data={custOrderList.filter((item) => {
+              if (filterType === item.orderStatus) {
+                  return true
+              } else if (filterType === '') {
+                  return true
+              }
+          })}
             renderItem={renderCustOrder}
             keyExtractor={(item, index) => index.toString()}
             style={{ margin: -10 }}
         />
+     </View>
      :
      viewCustOrderSelected === VIEW_CUST_ORDER.YES ?
      <View style={{ 
@@ -263,7 +311,7 @@ navigation.setOptions({
                  Customer Contact:
                </Text>
                <Text style={{ fontSize: 16, fontWeight: '400' }}>
-                 {customerOrderSelected.contactNo}
+                 {/* {customerOrderSelected.contactNo} */}
                </Text>
            </View>
            <View style={styles.view}>
@@ -355,7 +403,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         //margin: 10,
         padding: 5,
-        backgroundColor: Colors.plum,
+        backgroundColor: Colors.lavenderBlush,
         shadowOffset: {
             width: 0,
             height: 5,
@@ -387,5 +435,26 @@ const styles = StyleSheet.create({
             shadowOpacity: 0.4,
             shadowRadius: 10,
             elevation: 2,
-    }
+    },
+    orderCat: {
+      height: 30,
+      paddingHorizontal: 8,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 15,
+      marginBottom: 8,
+      marginRight: 8,
+      backgroundColor: Colors.plum,
+      shadowOffset: {
+          width: 0,
+          height: 4,
+          },
+          shadowOpacity: 0.2,
+          shadowRadius: 5,
+          elevation: 0.1,
+    },
+    orderCatText: {
+        fontSize: 16,
+        fontWeight: '600',
+    },
 })

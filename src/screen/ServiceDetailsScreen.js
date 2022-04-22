@@ -94,6 +94,7 @@ const createServiceOrder = async () => {
       serviceEndTime: selectedServiceEndTime,
       createdAt: Date.now(),
       sellerID: serviceSelected.sellerID,
+      sellerContactNo: serviceSelected.serviceStoreContactNo,
       userID: userSelected.uniqueID,
       userName: userSelected.userName,
       userContactNo: userSelected.contactNo,

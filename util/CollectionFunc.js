@@ -42,4 +42,5 @@ export const CollectionFunc = async () => {
             s.order = orderTemp;
         });
     });
+
 }

@@ -5,6 +5,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constant/Colors';
 import { CommonStore } from '../../store/CommonStore';
+import { CollectionFunc } from '../../util/CollectionFunc';
 
 //Firebase
 import { authentication, db } from '../../constants/key';
@@ -32,10 +33,14 @@ const isLoggedIn = CommonStore.useState(s => s.isLoggedIn);
 const userSelected = CommonStore.useState(s => s.userSelected);
 
 useEffect(() => {
+  CollectionFunc();
+});
+
+useEffect(() => {
     setUserName(userSelected.userName);
     setContactNo(userSelected.contactNo);
     setUserWallet(userSelected.walletAmount);
-},[userSelected, topUpWallet])
+},[userSelected, topUpWallet, isLoggedIn])
 
 
 //Add Wallet Amount
@@ -78,7 +83,7 @@ navigation.setOptions({
       }} 
       onPress={() => { 
         editProfile === EDIT_PROFILE.NO ?
-        navigation.goBack() :
+        navigation.navigate('Home') :
         setEditProfile(EDIT_PROFILE.NO);
       }}>
         <View style={{
@@ -337,7 +342,7 @@ navigation.setOptions({
                   }}
                 >
                   <Text style= {{ fontSize: 17, fontWeight: '500' }}>
-                    {userWallet.toFixed(2)}
+                    {userSelected.walletAmount.toFixed(2)}
                   </Text>
                 </TouchableOpacity>
               </View>

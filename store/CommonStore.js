@@ -15,7 +15,7 @@ export const CommonStore = new Store({
     serviceSelected: null,
     serviceSelectedEdit: null,
 
-    storeSelected: {},
+    storeSelected: {}, //Store Selected by User
     storeSelectedService: [],
 
     order: [], //All Order
