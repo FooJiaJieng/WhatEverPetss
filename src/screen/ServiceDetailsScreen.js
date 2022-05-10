@@ -109,8 +109,8 @@ const createServiceOrder = async () => {
   } else {
     Alert.alert('Alert', 'Insufficient Wallet Amount',
     [
-    { text: 'Top Up', onPress: () => {
-        navigation.navigate('BuyerProfile');
+    { text: 'Okay', onPress: () => {
+        //navigation.navigate('BuyerProfile');
       }
     },
     {
@@ -266,7 +266,15 @@ navigation.setOptions({
                 Contact Number:
               </Text>
               <Text style={{ fontSize: 16, fontWeight: '400' }}>
-                
+                {serviceSelected.serviceStoreContactNo}
+              </Text>
+          </View>
+          <View style={styles.view}>
+              <Text style={{ fontSize: 16, fontWeight: '500' }}>
+                Location:
+              </Text>
+              <Text style={{ fontSize: 16, fontWeight: '400' }}>
+                {serviceSelected.serviceStoreAddress}
               </Text>
           </View>
           <View style={styles.view}>
@@ -314,7 +322,7 @@ navigation.setOptions({
             />
           </View>
         </View>
-        <View style={{ paddingVertical: 20 }}>
+        <View style={{ paddingVertical: 10, marginHorizontal: -5, paddingHorizontal: 10, marginTop: 10, borderRadius: 15, backgroundColor: Colors.lavender }}>
           <Text style={{
             fontSize: 20,
             fontWeight: '500',

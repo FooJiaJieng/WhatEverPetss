@@ -259,6 +259,7 @@ navigation.setOptions({
               </Text>
           </TouchableOpacity>
         </ScrollView>
+        { custOrderList.length > 0 ?
         <FlatList
             data={custOrderList.filter((item) => {
               if (filterType === item.orderStatus) {
@@ -271,6 +272,13 @@ navigation.setOptions({
             keyExtractor={(item, index) => index.toString()}
             style={{ margin: -10 }}
         />
+        :
+        <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 15 }}>
+            <Text style={{ fontSize: 18, color: 'grey', fontWeight: '700' }}>
+                No Order Currently
+            </Text>
+        </View>
+        }
      </View>
      :
      viewCustOrderSelected === VIEW_CUST_ORDER.YES ?

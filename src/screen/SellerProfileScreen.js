@@ -27,6 +27,8 @@ const [storeWallet, setStoreWallet] = useState(0);
 
 const userType = CommonStore.useState(s => s.userType);
 const userSelected = CommonStore.useState(s => s.userSelected);
+const userSelectedID = CommonStore.useState(s => s.userSelectedID);
+const userList = CommonStore.useState(s => s.userList);
 const serviceSelectedEdit = CommonStore.useState(s => s.serviceSelectedEdit);
 
 useEffect(() => {
@@ -35,6 +37,20 @@ useEffect(() => {
   setStoreAddress(userSelected.storeAddress);
   setStoreWallet(userSelected.storeWallet);
 },[userSelected, editSellerProfile])
+
+
+useEffect(() => {
+  var userSelectedTemp = {};
+    for (var i=0; i < userList.length; i++) {
+      if (userList[i].uniqueID === userSelectedID) {
+      userSelectedTemp = userList[i];
+      CommonStore.update(s => {
+        s.userSelected = userSelectedTemp;
+        })
+      }
+    }
+
+},[editSellerProfile])
 
 //Update Store/Seller Info
 const updateStoreInfo = async () => {
@@ -105,7 +121,7 @@ navigation.setOptions({
           { editSellerProfile === EDIT_SELLER_PROFILE.NO ?
           <View>
             <View style={{
-              height: 100,
+              //height: 100,
               paddingTop: 10,
             }}>
                 <TouchableOpacity style={{
@@ -120,7 +136,7 @@ navigation.setOptions({
                   }}
                 >
                   <Image
-                    source={require('../assets/image/YuruCampCamp.png')}
+                    source={{uri: userSelected.userImage}}
                     style={{
                       width: 50,
                       height: 50,
@@ -136,7 +152,7 @@ navigation.setOptions({
                   </Text>
                 </TouchableOpacity>
             </View>
-
+            <View style={{ borderWidth: 1, marginTop: 10, marginHorizontal: 8 }}/>
             <View style={{
               paddingHorizontal: 10,
               paddingTop: 5,
@@ -254,9 +270,10 @@ navigation.setOptions({
                   onPress={() => {
                     //setTopUpWallet(true);
                   }}
+                  disabled={true}
                 >
                   <Text style= {{ fontSize: 17, fontWeight: '500' }}>
-                    {storeWallet.toFixed(2)}
+                    RM {storeWallet.toFixed(2)}
                   </Text>
                 </TouchableOpacity>
               </View>

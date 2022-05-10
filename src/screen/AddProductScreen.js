@@ -156,6 +156,13 @@ const deleteService = async() => {
             // show an error alert
             alert(error);
         })
+    
+    const userRefs = doc(db, 'User', userSelected.uniqueID);
+    await updateDoc(userRefs, {
+        serviceInStore: increment(-1),
+    })
+    .then(() => {
+    })
 }
 
 const updateServiceLength = async () => {
@@ -534,7 +541,7 @@ return (
                         </Text>
                     </View>
                 </View>
-                <View style={{ }}>
+                <View style={{ minHeight: 40 }}>
                     <FlatList
                         data={serviceTimeInfo}
                         extraData={serviceTimeInfo}
@@ -570,7 +577,7 @@ return (
                         </TouchableOpacity>
                 </View>
             </View>
-            <View style={{
+            {/* <View style={{
                 paddingVertical: 5,
             }}>
                 <Text style={[
@@ -713,7 +720,7 @@ return (
                         </Text>
                     </View>
                 </View>
-            </View>
+            </View> */}
         </View>
         <View 
             style={{
@@ -802,8 +809,16 @@ return (
                         elevation: 2,
                 }}
                     onPress={() => {
+                        if (!userSelected.storeName) {
+                            Alert.alert('Alert', 'Please provide your store name first at Seller Profile first.')
+                        } 
+                        else if (!userSelected.storeAddress) {
+                            Alert.alert('Alert', 'Please provide your store address first at Seller Profile first.')
+                        } 
+                        else {
                         createNewService();
                         updateServiceLength();
+                        }
                     }}
                 >
                     <Text style={ styles.text }>

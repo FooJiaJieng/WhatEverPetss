@@ -121,7 +121,7 @@ const renderReceipt =({item, index}) => {
     <View style={{ padding: 10, paddingHorizontal: 15, marginBottom: 3 }}>
       <TouchableOpacity style={{
           width: '100%',
-          height: 160,
+          minHeight: 160,
           padding: 5,
           borderWidth: 1,
           borderColor: '#E5E5E5',
@@ -328,6 +328,7 @@ navigation.setOptions({
             </Text>
         </TouchableOpacity>
       </ScrollView>
+      { selectedUserOrderList.length > 0 ?
       <FlatList
           data={selectedUserOrderList.filter((item) => {
               if (filterType === item.orderStatus) {
@@ -340,6 +341,13 @@ navigation.setOptions({
           keyExtractor={(item, index) => index.toString()}
           style={{ margin: -10 }}
       />
+      :
+      <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 15 }}>
+          <Text style={{ fontSize: 18, color: 'grey', fontWeight: '700' }}>
+              No Purchase History Currently
+          </Text>
+      </View>
+      }
     </View>
     :
     viewPurchaseHistorySelected === VIEW_PURCHASE_HISTORY.YES ?

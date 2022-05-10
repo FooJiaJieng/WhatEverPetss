@@ -11,6 +11,7 @@ import {
     Dimensions,
     SafeAreaView,
     Alert,
+    Image
 } from 'react-native'
 import Colors from '../constant/Colors';
 import { CommonStore } from '../../store/CommonStore';
@@ -94,9 +95,7 @@ const registerUserAcc = async () => {
 const loginUserAcc = () => {
     signInWithEmailAndPassword(authentication, userEmail, userPassword)
         .then((credentials) => {
-            CommonStore.update(s => {
-                s.isLoggedIn = true;
-            });
+          console.log(credentials)
             var userSelectedTemp = {};
             for (var i=0; i < userList.length; i++) {
               if (userList[i].uniqueID === credentials.user.uid) {
@@ -104,6 +103,7 @@ const loginUserAcc = () => {
               CommonStore.update(s => {
                 s.userSelected = userSelectedTemp;
                 s.userSelectedID = credentials.user.uid;
+                s.isLoggedIn = true;
                 })
               }
             }
@@ -124,11 +124,19 @@ const loginUserAcc = () => {
             behavior='padding'
         >
         {!isRegisterScreen ?    
-            <SafeAreaView style={{ width: Dimensions.get('screen').width, height: Dimensions.get('screen').height, justifyContent: 'space-between' }}>
-              <View style={{ alignItems: 'center', paddingVertical: 30 }}>
-                <Text style={{ fontSize: 45, fontWeight: '700', }}>
+            <SafeAreaView style={{ width: Dimensions.get('screen').width, height: Dimensions.get('screen').height, backgroundColor: 'white' }}>
+              <View style={{ alignItems: 'center', paddingVertical: 20 }}>
+                {/* <Text style={{ fontSize: 52, fontWeight: '600', color: Colors.mediumPurple }}>
                   WhatEverPets
-                </Text>
+                </Text> */}
+                <Image
+                    source={require('../assets/image/WhatEverPetsTitle.png')}
+                    style={{ width: Dimensions.get('screen').width, height: 75, borderWidth: 1, borderColor: '#E5E5E5', borderRadius: 5, }}
+                />
+                <Image
+                    source={require('../assets/image/WhatEverPetsLogo.png')}
+                    style={{ width: '100%', height: 310, borderWidth: 1, borderColor: '#E5E5E5', borderRadius: 5, top: -10, zIndex: -1 }}
+                />
               </View>
               <View style={{ paddingHorizontal: 10 }}>
                 <View style={{ justifyContent: 'center', paddingVertical: 10 }}>
@@ -176,7 +184,7 @@ const loginUserAcc = () => {
                     </TouchableOpacity>
                 </View>
               </View>
-              <View style={{ alignItems: 'center', paddingVertical: 10, top: -100 }}>
+              <View style={{ alignItems: 'center', paddingVertical: 10, }}>
                 <TouchableOpacity
                     onPress={() => {
                         setIsRegisterScreen(true);

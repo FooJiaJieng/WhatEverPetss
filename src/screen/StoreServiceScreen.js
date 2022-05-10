@@ -80,6 +80,7 @@ const renderSelectedService =({item, index}) => {
                 });
                 console.log(serviceSelected)
             }}
+            disabled={ storeSelected.uniqueID === userSelected.uniqueID ? true : false }
         >
             <View>
                 <Image

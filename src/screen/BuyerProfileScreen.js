@@ -9,11 +9,13 @@ import { CollectionFunc } from '../../util/CollectionFunc';
 
 //Firebase
 import { authentication, db } from '../../constants/key';
-import { signOut } from 'firebase/auth';
+import { signOut, getAuth } from 'firebase/auth';
 import { collection, setDoc, updateDoc, doc, query, onSnapshot, increment } from 'firebase/firestore';
 
 
 const BuyerProfileScreen = props => {
+
+const auth = getAuth();
 
 const EDIT_PROFILE = {
   YES: 'EDIT_PROFILE.YES',
@@ -31,10 +33,25 @@ const [topUpWallet, setTopUpWallet] = useState(false);
 const userType = CommonStore.useState(s => s.userType);
 const isLoggedIn = CommonStore.useState(s => s.isLoggedIn);
 const userSelected = CommonStore.useState(s => s.userSelected);
+const userSelectedID = CommonStore.useState(s => s.userSelectedID);
+const userList = CommonStore.useState(s => s.userList);
 
 useEffect(() => {
-  CollectionFunc();
-});
+  var userSelectedTemp = {};
+    for (var i=0; i < userList.length; i++) {
+      if (userList[i].uniqueID === userSelectedID) {
+      userSelectedTemp = userList[i];
+      CommonStore.update(s => {
+        s.userSelected = userSelectedTemp;
+        })
+      }
+    }
+
+},[editProfile, topUpWallet])
+
+useEffect(() => {
+    CollectionFunc();
+}, [topUpAmount]);
 
 useEffect(() => {
     setUserName(userSelected.userName);
@@ -49,7 +66,10 @@ const topUpWalletAmount = async () => {
   await updateDoc(userRef, {
     walletAmount: increment(topUpAmount)
   })
+    // CommonStore.update(s => {
 
+    // })
+    Alert.alert('Done', 'Top Up Successfully');
     setTopUpWallet(false);
 }
 
@@ -63,17 +83,6 @@ const updateUserInfo = async () => {
   Alert.alert('Success', 'Update Successfully');
 }
 
-const signOutUserAcc = () => {
-  signOut(authentication)
-  .then((re) => {
-    CommonStore.update(s => {
-      s.isLoggedIn = false;
-    })
-  })
-  .catch((error) => {
-    console.log(error);
-  })
-}
 
 const { navigation, route } = props;
 
@@ -120,7 +129,16 @@ navigation.setOptions({
       <TouchableOpacity style={{
       }} 
       onPress={() => {
-        signOutUserAcc();
+        signOut(authentication)
+          .then((re) => {
+            CommonStore.update(s => {
+              s.isLoggedIn = false;
+              s.userSelectedID = '';
+            })
+          })
+          .catch((error) => {
+            console.log(error);
+          })
       }}>
         <View style={{
           justifyContent: 'center',
@@ -238,7 +256,7 @@ navigation.setOptions({
           { editProfile === EDIT_PROFILE.NO ?
           <View>
             <View style={{
-              height: 100,
+              //height: 100,
               paddingTop: 10,
             }}>
                 <TouchableOpacity style={{
@@ -251,7 +269,7 @@ navigation.setOptions({
                   }}
                 >
                   <Image
-                    source={require('../assets/image/YuruCampCamp.png')}
+                    source={{uri: userSelected.userImage}}
                     style={{
                       width: 50,
                       height: 50,
@@ -267,7 +285,7 @@ navigation.setOptions({
                   </Text>
                 </TouchableOpacity>
             </View>
-
+            <View style={{ borderWidth: 1, marginTop: 10, marginHorizontal: 8 }}/>
             <View style={{
               paddingHorizontal: 10,
               paddingTop: 5,
@@ -334,7 +352,9 @@ navigation.setOptions({
                   Wallet Amount
                 </Text>
                 <TouchableOpacity style={[styles.textInput,{
-                    justifyContent: 'center',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flexDirection: 'row',
                     //alignItems: 'center',
                   }]}
                   onPress={() => {
@@ -342,8 +362,9 @@ navigation.setOptions({
                   }}
                 >
                   <Text style= {{ fontSize: 17, fontWeight: '500' }}>
-                    {userSelected.walletAmount.toFixed(2)}
+                    RM {userSelected.walletAmount}
                   </Text>
+                  <MaterialCommunityIcons name='plus' size={24} color={Colors.deepSkyBlue}/>
                 </TouchableOpacity>
               </View>
             </View>

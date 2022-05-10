@@ -220,18 +220,25 @@ const renderStoreService =({item, index}) => {
                     </Text>
                 </TouchableOpacity>
             </ScrollView>
+            { selectedUserServiceList.length > 0 ?
             <FlatList
-                data={selectedUserServiceList.filter((item) => {
+                data={selectedUserServiceList.length > 0 ? selectedUserServiceList.filter((item) => {
                     if (filterType === item.serviceType) {
                         return true
                     } else if (filterType === '') {
                         return true
                     }
-                })}
-                // data={selectedUserServiceList}
+                }) : null }
                 renderItem={renderStoreService}
                 keyExtractor={(item, index) => index.toString()}
             />
+            :
+            <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 15 }}>
+                <Text style={{ fontSize: 18, color: 'grey', fontWeight: '700' }}>
+                    No Service In This Store
+                </Text>
+            </View>
+            }
         </View>
     </ScrollView>
   )
